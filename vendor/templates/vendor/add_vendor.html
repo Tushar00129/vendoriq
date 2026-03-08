@@ -1,0 +1,183 @@
+{% extends 'vendor/base.html' %}
+
+{% block title %}Add Vendor{% endblock %}
+
+{% block content %}
+
+<div class="vendor-add">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Add Vendor</h1>
+            <p class="page-subtitle">Add a new vendor with validated ratings. All fields are required.</p>
+        </div>
+        <div class="page-hint">Ratings must be between 1.0 and 5.0</div>
+    </div>
+
+    <div class="card form-card">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %}" style="margin-bottom:15px;">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <form method="POST" class="vendor-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" style="margin-bottom:15px;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="form-grid">
+            <div class="form-field form-field-full">
+                <label>{{ form.name.label }}</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="field-error">{{ form.name.errors|striptags }}</div>
+                {% endif %}
+                <div class="field-hint">Use letters, spaces, and standard symbols like &amp; or -.</div>
+            </div>
+
+            <div class="form-field">
+                <label>{{ form.delivery_rating.label }}</label>
+                {{ form.delivery_rating }}
+                {% if form.delivery_rating.errors %}
+                    <div class="field-error">{{ form.delivery_rating.errors|striptags }}</div>
+                {% endif %}
+                <div class="field-hint">Delivery reliability score.</div>
+            </div>
+
+            <div class="form-field">
+                <label>{{ form.quality_rating.label }}</label>
+                {{ form.quality_rating }}
+                {% if form.quality_rating.errors %}
+                    <div class="field-error">{{ form.quality_rating.errors|striptags }}</div>
+                {% endif %}
+                <div class="field-hint">Quality of goods or services.</div>
+            </div>
+
+            <div class="form-field">
+                <label>{{ form.price_rating.label }}</label>
+                {{ form.price_rating }}
+                {% if form.price_rating.errors %}
+                    <div class="field-error">{{ form.price_rating.errors|striptags }}</div>
+                {% endif %}
+                <div class="field-hint">Pricing competitiveness.</div>
+            </div>
+
+            <div class="form-field">
+                <label>{{ form.communication_rating.label }}</label>
+                {{ form.communication_rating }}
+                {% if form.communication_rating.errors %}
+                    <div class="field-error">{{ form.communication_rating.errors|striptags }}</div>
+                {% endif %}
+                <div class="field-hint">Responsiveness and clarity.</div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary-custom">Save Vendor</button>
+            <span class="form-note">All fields are validated server-side.</span>
+        </div>
+    </form>
+</div>
+</div>
+
+<style>
+    .vendor-add .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    .vendor-add .page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+    .vendor-add .page-subtitle {
+        color: #64748b;
+        font-weight: 500;
+        margin: 0;
+    }
+    .vendor-add .page-hint {
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    .vendor-add .form-card {
+        border: 1px solid #e2e8f0;
+    }
+    .vendor-add .vendor-form {
+        margin-top: 8px;
+    }
+    .vendor-add .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 18px 22px;
+    }
+    .vendor-add .form-field-full {
+        grid-column: 1 / -1;
+    }
+    .vendor-add .form-field label {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: block;
+        color: #0f172a;
+    }
+    .vendor-add .form-input {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        padding: 12px 14px;
+        font-size: 14px;
+        background: #fff;
+        transition: 0.2s ease;
+    }
+    .vendor-add .form-input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .vendor-add .field-hint {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 6px;
+    }
+    .vendor-add .field-error {
+        margin-top: 6px;
+        color: #dc2626;
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .vendor-add .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+    }
+    .vendor-add .form-note {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 500;
+    }
+    @media (max-width: 860px) {
+        .vendor-add .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .vendor-add .page-hint {
+            white-space: normal;
+        }
+    }
+</style>
+
+{% endblock %}

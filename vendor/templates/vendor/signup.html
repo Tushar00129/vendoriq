@@ -1,0 +1,138 @@
+{% extends "base_landing.html" %}
+{% block title %}Sign Up - VendorIQ{% endblock %}
+
+{% block extra_css %}
+<style>
+.auth-page {
+    max-width: 420px;
+    margin: 60px auto 80px;
+    padding: 40px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+    border: 1px solid rgba(226,232,240,0.8);
+}
+.auth-page h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+.auth-page .subtitle {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 28px;
+}
+.auth-page label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.auth-page input[type="text"],
+.auth-page input[type="password"],
+.auth-page input[type="email"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+}
+.auth-page input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+.auth-page .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+}
+.auth-page .btn-submit:hover {
+    opacity: 0.95;
+}
+.auth-page .error-list {
+    color: #dc2626;
+    font-size: 13px;
+    margin: -12px 0 12px;
+    list-style: none;
+    padding: 0;
+}
+.auth-page .login-link {
+    margin-top: 24px;
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+}
+.auth-page .login-link a {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
+.auth-page .login-link a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+    <h2>Create your account</h2>
+    <p class="subtitle">Sign up to start managing your vendors</p>
+
+    <form method="post" action="{% url 'signup' %}">
+        {% csrf_token %}
+
+        <label for="id_username">Username</label>
+        <input type="text" name="username" id="id_username" required autofocus
+               placeholder="Choose a username"
+               maxlength="150"
+               {% if form.username.value %}value="{{ form.username.value }}"{% endif %}>
+        {% if form.username.errors %}
+        <ul class="error-list">{% for err in form.username.errors %}<li>{{ err }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        <label for="id_email">Email</label>
+        <input type="email" name="email" id="id_email" required
+               placeholder="Enter your email"
+               {% if form.email.value %}value="{{ form.email.value }}"{% endif %}>
+        {% if form.email.errors %}
+        <ul class="error-list">{% for err in form.email.errors %}<li>{{ err }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        <label for="id_password1">Password</label>
+        <input type="password" name="password1" id="id_password1" required
+               placeholder="Create a password"
+               autocomplete="new-password">
+        {% if form.password1.errors %}
+        <ul class="error-list">{% for err in form.password1.errors %}<li>{{ err }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        <label for="id_password2">Confirm Password</label>
+        <input type="password" name="password2" id="id_password2" required
+               placeholder="Confirm your password"
+               autocomplete="new-password">
+        {% if form.password2.errors %}
+        <ul class="error-list">{% for err in form.password2.errors %}<li>{{ err }}</li>{% endfor %}</ul>
+        {% endif %}
+
+        <button type="submit" class="btn-submit">Sign Up</button>
+    </form>
+
+    <p class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login</a>
+    </p>
+</div>
+
+{% endblock %}

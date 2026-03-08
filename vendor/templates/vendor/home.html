@@ -1,0 +1,618 @@
+{% extends 'base_landing.html' %}
+{% block title %}Home - VendorIQ{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --violet-1: #4f46e5;
+    --violet-2: #6366f1;
+    --blue-1: #0ea5e9;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --surface: #ffffff;
+    --border: #dbe4f1;
+}
+
+.landing-main {
+    max-width: none;
+    width: 100%;
+    padding: 0 20px 40px;
+}
+
+.homepage {
+    padding-top: 16px;
+    padding-bottom: 20px;
+}
+
+.home-shell {
+    display: grid;
+    grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.home-sidebar {
+    position: sticky;
+    top: 18px;
+}
+
+.side-card {
+    background: #ffffff;
+    border: 1px solid #dbe6f4;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 10px 24px rgba(30, 41, 59, 0.06);
+    margin-bottom: 14px;
+}
+
+.side-title {
+    font-size: 13px;
+    color: #64748b;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.side-value {
+    font-size: 26px;
+    color: #0f172a;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.side-subtext {
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.side-links {
+    display: grid;
+    gap: 8px;
+}
+
+.side-link {
+    display: block;
+    text-decoration: none;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 14px;
+    border: 1px solid #dbe4f1;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #f8fbff;
+    transition: 0.2s ease;
+}
+
+.side-link:hover {
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+    background: #eff6ff;
+}
+
+.side-list {
+    display: grid;
+    gap: 8px;
+}
+
+.side-item {
+    font-size: 13px;
+    color: #334155;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 10px;
+}
+
+.home-main {
+    min-width: 0;
+}
+
+.hero-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(125deg, #312e81 0%, var(--violet-1) 45%, #2563eb 100%);
+    border-radius: 24px;
+    color: #f8fafc;
+    padding: 38px;
+    margin-bottom: 18px;
+    box-shadow: 0 18px 50px rgba(49, 46, 129, 0.28);
+}
+
+.hero-card::before,
+.hero-card::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    opacity: 0.22;
+}
+
+.hero-card::before {
+    width: 320px;
+    height: 320px;
+    background: #a78bfa;
+    top: -140px;
+    right: -80px;
+}
+
+.hero-card::after {
+    width: 260px;
+    height: 260px;
+    background: #38bdf8;
+    bottom: -140px;
+    right: 30%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+}
+
+.hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.hero-title {
+    font-size: clamp(30px, 4.1vw, 48px);
+    line-height: 1.08;
+    margin-bottom: 14px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+}
+
+.hero-subtitle {
+    font-size: 17px;
+    max-width: 650px;
+    color: rgba(248, 250, 252, 0.92);
+    margin-bottom: 24px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.hero-actions .btn-outline-custom {
+    border-color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.12);
+    color: #f8fafc;
+}
+
+.hero-actions .btn-outline-custom:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.hero-chips {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.hero-chip {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    box-shadow: 0 8px 26px rgba(15, 23, 42, 0.06);
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    color: var(--text-main);
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+}
+
+.stat-help {
+    margin-top: 7px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.status-live {
+    color: #16a34a;
+}
+
+.overview-panel {
+    background: linear-gradient(120deg, #ecfeff 0%, #eef2ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.overview-title {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 10px;
+    font-weight: 800;
+}
+
+.overview-copy {
+    color: #334155;
+    margin: 0;
+    line-height: 1.55;
+}
+
+.workflow-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.workflow-step {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.step-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(120deg, var(--violet-2), var(--blue-1));
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.step-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.step-copy {
+    font-size: 13px;
+    color: #475569;
+    margin: 0;
+}
+
+.section-title {
+    color: #0f172a;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.4px;
+}
+
+.section-subtitle {
+    color: #475569;
+    margin-bottom: 18px;
+}
+
+.vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 16px;
+}
+
+.vendor-card {
+    background: #ffffff;
+    border: 1px solid #dbe6f4;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 10px 24px rgba(30, 41, 59, 0.06);
+}
+
+.vendor-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.vendor-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.vendor-name {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    text-transform: capitalize;
+}
+
+.vendor-score {
+    display: inline-block;
+    background: #ecfdf3;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.metric-row {
+    margin-top: 14px;
+}
+
+.metric-line {
+    display: flex;
+    justify-content: space-between;
+    color: #475569;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.metric-track {
+    height: 8px;
+    width: 100%;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.metric-fill {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.metric-fill.delivery {
+    background: linear-gradient(90deg, #2563eb, #38bdf8);
+}
+
+.metric-fill.quality {
+    background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+.empty-state {
+    padding: 36px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px dashed #94a3b8;
+    text-align: center;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    color: #0f172a;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+    color: #475569;
+}
+
+@media (max-width: 1200px) {
+    .home-shell {
+        grid-template-columns: 1fr;
+    }
+    .home-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+    }
+    .side-card {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .landing-main {
+        padding: 0 14px 28px;
+    }
+    .hero-card {
+        padding: 30px 24px;
+    }
+    .section-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .homepage {
+        padding-top: 20px;
+    }
+    .hero-subtitle {
+        font-size: 15px;
+    }
+    .vendor-name {
+        font-size: 22px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="homepage">
+    <div class="home-shell">
+        <aside class="home-sidebar">
+            <section class="side-card">
+                <p class="side-title">Quick Actions</p>
+                <div class="side-links">
+                    <a href="{% url 'dashboard' %}" class="side-link">Performance Dashboard</a>
+                    <a href="{% url 'add_vendor' %}" class="side-link">Add New Vendor</a>
+                    <a href="{% url 'vendor_list' %}" class="side-link">Vendor Directory</a>
+                </div>
+            </section>
+
+            <section class="side-card">
+                <p class="side-title">Snapshot</p>
+                <p class="side-value">{{ total_vendors }}</p>
+                <p class="side-subtext">Total vendors managed</p>
+                <p class="side-subtext">Top: {% if top_vendor %}{{ top_vendor.name }}{% else %}N/A{% endif %}</p>
+                <p class="side-subtext">Best score: {{ highest_score }}/5</p>
+            </section>
+
+            <section class="side-card">
+                <p class="side-title">How To Use</p>
+                <div class="side-list">
+                    <p class="side-item">1. Add vendors with rating details.</p>
+                    <p class="side-item">2. Compare scores and rank movement.</p>
+                    <p class="side-item">3. Prioritize reliable suppliers.</p>
+                </div>
+            </section>
+        </aside>
+
+        <div class="home-main">
+            <section class="hero-card">
+                <div class="hero-content">
+                    <span class="hero-label">Vendor Intelligence Suite</span>
+                    <h1 class="hero-title">Track vendor performance, compare suppliers, and make better sourcing decisions.</h1>
+                    <p class="hero-subtitle">
+                        VendorIQ turns your delivery, quality, price, and communication ratings into a clear score so your team can quickly identify reliable partners and spot risk early.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{% url 'dashboard' %}" class="btn-primary-custom">Go to Dashboard</a>
+                        <a href="{% url 'add_vendor' %}" class="btn-outline-custom">Add New Vendor</a>
+                        <a href="{% url 'vendor_list' %}" class="btn-outline-custom">View All Vendors</a>
+                    </div>
+                    <div class="hero-chips">
+                        <span class="hero-chip">4-factor vendor scoring</span>
+                        <span class="hero-chip">Top performer ranking</span>
+                        <span class="hero-chip">Actionable performance view</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stat-grid">
+                <article class="stat-card">
+                    <p class="stat-label">Total Vendors</p>
+                    <h2 class="stat-value">{{ total_vendors }}</h2>
+                    <p class="stat-help">Suppliers currently tracked in your system.</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">Top Vendor</p>
+                    <h2 class="stat-value">{% if top_vendor %}{{ top_vendor.name }}{% else %}N/A{% endif %}</h2>
+                    <p class="stat-help">{% if top_vendor %}Score: {{ highest_score }}/5{% else %}No vendor ratings yet{% endif %}</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">System Status</p>
+                    <h2 class="stat-value status-live">Active</h2>
+                    <p class="stat-help">Performance monitoring is running normally.</p>
+                </article>
+            </section>
+
+            <section class="overview-panel">
+                <h3 class="overview-title">What this website does</h3>
+                <p class="overview-copy">
+                    VendorIQ helps you evaluate and rank vendors with one consistent scoring model. Each vendor gets rated across delivery reliability, quality of goods and services, pricing competitiveness, and communication. The platform then calculates an overall score so you can choose stronger partners with confidence.
+                </p>
+                <div class="workflow-grid">
+                    <article class="workflow-step">
+                        <span class="step-number">1</span>
+                        <h4 class="step-title">Add Vendor Data</h4>
+                        <p class="step-copy">Record vendor ratings on core performance factors.</p>
+                    </article>
+                    <article class="workflow-step">
+                        <span class="step-number">2</span>
+                        <h4 class="step-title">Auto Score and Rank</h4>
+                        <p class="step-copy">VendorIQ computes each score and orders vendors from best to weakest.</p>
+                    </article>
+                    <article class="workflow-step">
+                        <span class="step-number">3</span>
+                        <h4 class="step-title">Take Action</h4>
+                        <p class="step-copy">Use insights to optimize procurement and reduce supply risk.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section>
+                <h3 class="section-title">Top Performing Vendors</h3>
+                <p class="section-subtitle">Live ranking based on overall performance score and delivery and quality trends.</p>
+                {% if vendors %}
+                <div class="vendor-grid">
+                    {% for vendor in vendors %}
+                    <article class="vendor-card">
+                        <div class="vendor-head">
+                            <span class="vendor-rank">#{{ vendor.rank }}</span>
+                            <span class="vendor-score">{{ vendor.score }}/5</span>
+                        </div>
+                        <h4 class="vendor-name">{{ vendor.name }}</h4>
+
+                        <div class="metric-row">
+                            <div class="metric-line">
+                                <span>Delivery</span>
+                                <span>{{ vendor.delivery_percent }}%</span>
+                            </div>
+                            <div class="metric-track">
+                                <div class="metric-fill delivery" style="width: {{ vendor.delivery_percent }}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-row">
+                            <div class="metric-line">
+                                <span>Quality</span>
+                                <span>{{ vendor.quality_percent }}%</span>
+                            </div>
+                            <div class="metric-track">
+                                <div class="metric-fill quality" style="width: {{ vendor.quality_percent }}%"></div>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <h3>No vendors added yet</h3>
+                    <p>Start by adding your first vendor. Once ratings are entered, VendorIQ will instantly calculate scores and show rankings here.</p>
+                    <a href="{% url 'add_vendor' %}" class="btn-primary-custom">Add Your First Vendor</a>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

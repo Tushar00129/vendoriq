@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - VendorIQ{% endblock %}
+
+{% block extra_css %}
+<style>
+.dashboard-page { font-family: 'DM Sans', 'Inter', sans-serif; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); min-height: calc(100vh - 110px); }
+.dashboard-title { font-size: 1.75rem; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; margin-bottom: 1.75rem; }
+.kpi-card { background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%); border-radius: 20px; padding: 24px; border: 1px solid rgba(226,232,240,0.8); box-shadow: 0 4px 24px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02); transition: all 0.35s cubic-bezier(0.4,0,0.2,1); overflow: hidden; position: relative; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); opacity: 0; transition: opacity 0.3s; }
+.kpi-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(59,130,246,0.12), 0 4px 12px rgba(0,0,0,0.05); border-color: rgba(59,130,246,0.2); }
+.kpi-card:hover::before { opacity: 1; }
+.kpi-card .kpi-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 8px; }
+.kpi-card .kpi-value { font-size: 2rem; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; line-height: 1.2; }
+.kpi-card .kpi-sub { font-size: 0.85rem; font-weight: 600; color: #10b981; margin-top: 8px; display: flex; align-items: center; gap: 6px; }
+.kpi-card .kpi-sub .dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.insight-premium { background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(59,130,246,0.06) 50%, rgba(34,211,238,0.06) 100%); border-radius: 20px; padding: 24px; border: 1px solid rgba(99,102,241,0.15); box-shadow: 0 4px 20px rgba(99,102,241,0.06); }
+.insight-premium h5 { font-weight: 700; color: #312e81; font-size: 1rem; margin-bottom: 16px; letter-spacing: -0.01em; }
+.insight-premium ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 16px; }
+.insight-premium li { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: rgba(255,255,255,0.7); border-radius: 12px; font-size: 0.9rem; font-weight: 500; color: #475569; border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+.insight-premium li.insight-good { border-left: 3px solid #10b981; }
+.insight-premium li.insight-warn { border-left: 3px solid #f59e0b; }
+.vendor-card-premium { background: linear-gradient(160deg, #ffffff 0%, #fafbfc 100%); border-radius: 20px; padding: 24px; border: 1px solid rgba(226,232,240,0.9); box-shadow: 0 4px 24px rgba(0,0,0,0.04); transition: all 0.35s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+.vendor-card-premium:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(59,130,246,0.14); border-color: rgba(59,130,246,0.25); }
+.vendor-card-premium .badge-premium { padding: 6px 14px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; position: absolute; top: 16px; right: 16px; }
+.vendor-card-premium .badge-gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+.vendor-card-premium .badge-silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+.vendor-card-premium .badge-bronze { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; }
+.vendor-card-premium .vendor-name { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 16px; letter-spacing: -0.02em; }
+.vendor-card-premium .progress-wrap { margin-bottom: 14px; }
+.vendor-card-premium .progress-wrap label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block; }
+.vendor-card-premium .progress-track { height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden; }
+.vendor-card-premium .progress-fill { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.vendor-card-premium .progress-fill-delivery { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.vendor-card-premium .progress-fill-quality { background: linear-gradient(90deg, #10b981, #34d399); }
+.vendor-card-premium .score-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(52,211,153,0.08)); border-radius: 12px; font-weight: 700; color: #059669; font-size: 1rem; margin-top: 8px; border: 1px solid rgba(16,185,129,0.2); }
+.chart-card-premium { background: linear-gradient(160deg, #ffffff 0%, #fafbfc 100%); border-radius: 20px; padding: 28px; border: 1px solid rgba(226,232,240,0.9); box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.chart-card-premium .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.chart-card-premium h5 { font-weight: 700; color: #0f172a; font-size: 1.1rem; margin: 0; }
+.chart-card-premium .form-select { border-radius: 12px; border: 1px solid #e2e8f0; padding: 10px 16px; font-weight: 500; color: #475569; background: #fff; cursor: pointer; }
+.section-title { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+.table-premium { background: linear-gradient(160deg, #ffffff 0%, #fafbfc 100%); border-radius: 20px; overflow: hidden; border: 1px solid rgba(226,232,240,0.9); box-shadow: 0 4px 24px rgba(0,0,0,0.04); }
+.table-premium table { border-collapse: collapse; width: 100%; }
+.table-premium thead tr { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-bottom: 2px solid #e2e8f0; }
+.table-premium th { padding: 16px 20px; text-align: left; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; }
+.table-premium td { padding: 16px 20px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; color: #334155; transition: background 0.2s; }
+.table-premium tbody tr:hover { background: rgba(59,130,246,0.04); }
+.table-premium tbody tr.top-row { background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(52,211,153,0.05) 100%); }
+.table-premium .rank-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; padding: 6px 10px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; }
+.table-premium .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; }
+.table-premium .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+.table-premium .rank-3 { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; }
+.table-premium .score-cell { font-weight: 700; color: #059669; }
+.empty-state { color: #64748b; font-size: 1rem; padding: 40px; text-align: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+<h1 class="dashboard-title">Vendor Dashboard</h1>
+
+<!-- ================= KPI SECTION ================= -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-label">Total Vendors</div>
+            <div class="kpi-value counter" data-target="{{ total_vendors }}">0</div>
+            <div class="kpi-sub"><span class="dot"></span> Growing vendor base</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-label">Top Vendor</div>
+            <div class="kpi-value">{% if top_vendor %}{{ top_vendor.name }}{% else %}—{% endif %}</div>
+            {% if highest_score %}<div class="kpi-sub"><span class="dot"></span> {{ highest_score }}/5</div>{% endif %}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-label">Highest Score</div>
+            <div class="kpi-value">{{ highest_score }}/5</div>
+            <div class="kpi-sub"><span class="dot"></span> Top performer benchmark</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kpi-card">
+            <div class="kpi-label">Average Score</div>
+            <div class="kpi-value">{{ average_score }}/5</div>
+            <div class="kpi-sub"><span class="dot"></span> Platform performance</div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= INSIGHTS ================= -->
+<div class="insight-premium mb-4">
+    <h5>Performance Insights</h5>
+    <ul>
+        <li class="insight-good">✓ Vendors with score above 4 are high reliability partners</li>
+        <li class="insight-warn">⚠ Vendors below 3 need quality monitoring</li>
+        <li class="insight-good">✓ Strong communication correlates with higher total score</li>
+    </ul>
+</div>
+
+<!-- ================= TOP VENDORS ================= -->
+<h2 class="section-title">Top Vendors</h2>
+<div class="row g-4 mb-4">
+{% for vendor in vendors|slice:":3" %}
+<div class="col-md-4">
+    <div class="vendor-card-premium">
+        {% if forloop.counter == 1 %}<span class="badge-premium badge-gold">🥇 Top Performer</span>
+        {% elif forloop.counter == 2 %}<span class="badge-premium badge-silver">🥈 Runner-up</span>
+        {% elif forloop.counter == 3 %}<span class="badge-premium badge-bronze">🥉 Third</span>{% endif %}
+        <div class="vendor-name">{{ vendor.name }}</div>
+        <div class="progress-wrap">
+            <label>Delivery</label>
+            <div class="progress-track">
+                <div class="progress-fill progress-fill-delivery" style="width: {{ vendor.delivery_percent }}%"></div>
+            </div>
+        </div>
+        <div class="progress-wrap">
+            <label>Quality</label>
+            <div class="progress-track">
+                <div class="progress-fill progress-fill-quality" style="width: {{ vendor.quality_percent }}%"></div>
+            </div>
+        </div>
+        <div class="score-badge">⭐ {{ vendor.score }}/5</div>
+    </div>
+</div>
+{% empty %}
+<div class="col-12"><p class="empty-state mb-0">No vendors added yet. <a href="{% url 'add_vendor' %}" style="color:#2563eb; font-weight:600;">Add your first vendor</a> to see rankings.</p></div>
+{% endfor %}
+</div>
+
+<!-- ================= CHART ================= -->
+<div class="chart-card-premium mb-4">
+    <div class="chart-header">
+        <h5>Vendor Performance Overview</h5>
+        <select id="chartFilter" class="form-select">
+            <option value="score">Total Score</option>
+            <option value="delivery">Delivery</option>
+            <option value="quality">Quality</option>
+            <option value="price">Price</option>
+            <option value="communication">Communication</option>
+        </select>
+    </div>
+    <canvas id="vendorChart"></canvas>
+</div>
+
+<!-- ================= RANKING TABLE ================= -->
+<h2 class="section-title">Vendor Rankings</h2>
+{% if vendors %}
+<div class="table-premium">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Delivery</th>
+                    <th>Quality</th>
+                    <th>Price</th>
+                    <th>Communication</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vendor in vendors %}
+                <tr {% if vendor.rank == 1 %}class="top-row"{% endif %}>
+                    <td>
+                        {% if vendor.rank == 1 %}<span class="rank-badge rank-1">🥇</span>
+                        {% elif vendor.rank == 2 %}<span class="rank-badge rank-2">🥈</span>
+                        {% elif vendor.rank == 3 %}<span class="rank-badge rank-3">🥉</span>
+                        {% else %}<span class="rank-badge" style="background:#f1f5f9; color:#64748b;">{{ vendor.rank }}</span>{% endif %}
+                    </td>
+                    <td><strong>{{ vendor.name }}</strong></td>
+                    <td>{{ vendor.delivery_rating }}</td>
+                    <td>{{ vendor.quality_rating }}</td>
+                    <td>{{ vendor.price_rating }}</td>
+                    <td>{{ vendor.communication_rating }}</td>
+                    <td class="score-cell">{{ vendor.score }}/5</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<p class="empty-state">No vendors added yet.</p>
+{% endif %}
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+/* -------- Animated Counter -------- */
+document.querySelectorAll('.counter').forEach(counter => {
+    const target = +counter.getAttribute('data-target');
+    let count = 0;
+
+    const updateCount = () => {
+        const increment = target / 50;
+        if (count < target) {
+            count += increment;
+            counter.innerText = Math.ceil(count);
+            setTimeout(updateCount, 30);
+        } else {
+            counter.innerText = target;
+        }
+    };
+
+    updateCount();
+});
+
+
+/* -------- Chart Data -------- */
+const vendorNames = [{% for v in vendors %}"{{ v.name }}",{% endfor %}];
+const scoreData = [{% for v in vendors %}{{ v.score }},{% endfor %}];
+const deliveryData = [{% for v in vendors %}{{ v.delivery_rating }},{% endfor %}];
+const qualityData = [{% for v in vendors %}{{ v.quality_rating }},{% endfor %}];
+const priceData = [{% for v in vendors %}{{ v.price_rating }},{% endfor %}];
+const communicationData = [{% for v in vendors %}{{ v.communication_rating }},{% endfor %}];
+
+const createBarGradient = (ctx) => {
+    const g = ctx.createLinearGradient(0, 0, 0, 300);
+    g.addColorStop(0, 'rgba(59, 130, 246, 0.95)');
+    g.addColorStop(0.5, 'rgba(99, 102, 241, 0.9)');
+    g.addColorStop(1, 'rgba(139, 92, 246, 0.85)');
+    return g;
+};
+
+const chartEl = document.getElementById('vendorChart');
+const chartCtx = chartEl.getContext('2d');
+const barGradient = createBarGradient(chartCtx);
+
+const chart = new Chart(chartCtx, {
+    type: 'bar',
+    data: {
+        labels: vendorNames,
+        datasets: [{
+            label: 'Score',
+            data: scoreData,
+            backgroundColor: barGradient,
+            borderRadius: 12,
+            borderSkipped: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 5,
+                grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                ticks: { font: { family: "'DM Sans', Inter, sans-serif", size: 11 }, color: '#64748b' }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { font: { family: "'DM Sans', Inter, sans-serif", size: 11 }, color: '#64748b' }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+
+document.getElementById('chartFilter').addEventListener('change', function() {
+
+    if (this.value === 'delivery') {
+        chart.data.datasets[0].data = deliveryData;
+    } 
+    else if (this.value === 'quality') {
+        chart.data.datasets[0].data = qualityData;
+    } 
+    else if (this.value === 'price') {
+        chart.data.datasets[0].data = priceData;
+    } 
+    else if (this.value === 'communication') {
+        chart.data.datasets[0].data = communicationData;
+    } 
+    else {
+        chart.data.datasets[0].data = scoreData;
+    }
+
+    chart.update();
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'vendor/base.html' %}
+
+{% block title %}Vendor List{% endblock %}
+
+{% block content %}
+
+<div class="vendor-list">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">All Vendors</h1>
+            <p class="page-subtitle">Clear, comparable performance snapshots across delivery, quality, price, and communication.</p>
+        </div>
+        <div class="page-chip">Sorted by overall score</div>
+    </div>
+
+    <div class="card list-card">
+        {% if vendors %}
+        <div class="table-wrap">
+            <table class="vendor-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Vendor</th>
+                        <th>Delivery</th>
+                        <th>Quality</th>
+                        <th>Price</th>
+                        <th>Communication</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for vendor in vendors %}
+                    <tr class="{% if forloop.counter <= 3 %}top-row{% endif %}">
+                        <td>
+                            <span class="rank-pill rank-{{ forloop.counter }}">{{ forloop.counter }}</span>
+                        </td>
+                        <td>
+                            <div class="vendor-name">{{ vendor.name }}</div>
+                            <div class="vendor-subtext">Vendor ID: VND-{{ vendor.id }}</div>
+                        </td>
+                        <td>{{ vendor.delivery_rating }}</td>
+                        <td>{{ vendor.quality_rating }}</td>
+                        <td>{{ vendor.price_rating }}</td>
+                        <td>{{ vendor.communication_rating }}</td>
+                        <td>
+                            <span class="score-badge {% if vendor.score >= 4 %}score-strong{% elif vendor.score >= 3 %}score-mid{% else %}score-low{% endif %}">
+                                {{ vendor.score }}/5
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No vendors added yet.</h3>
+            <p>Add your first vendor to see performance details here.</p>
+            <a href="{% url 'add_vendor' %}" class="btn-primary-custom">Add Vendor</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .vendor-list .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+    .vendor-list .page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+    .vendor-list .page-subtitle {
+        color: #64748b;
+        font-weight: 500;
+        margin: 0;
+    }
+    .vendor-list .page-chip {
+        background: #eef2ff;
+        color: #4338ca;
+        padding: 10px 16px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .vendor-list .list-card {
+        border: 1px solid #e2e8f0;
+        padding: 0;
+        overflow: hidden;
+    }
+    .vendor-list .table-wrap {
+        overflow-x: auto;
+    }
+    .vendor-list .vendor-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 820px;
+    }
+    .vendor-list .vendor-table thead th {
+        background: #f8fafc;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #64748b;
+        padding: 16px 18px;
+        border-bottom: 1px solid #e2e8f0;
+        font-weight: 700;
+    }
+    .vendor-list .vendor-table tbody td {
+        padding: 16px 18px;
+        border-bottom: 1px solid #eef2f7;
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .vendor-list .vendor-table tbody tr:hover {
+        background: #f8fafc;
+    }
+    .vendor-list .top-row {
+        background: #fefce8;
+    }
+    .vendor-list .rank-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: #e2e8f0;
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .vendor-list .rank-1 {
+        background: #fbbf24;
+        color: #1f2937;
+    }
+    .vendor-list .rank-2 {
+        background: #cbd5f5;
+        color: #1f2937;
+    }
+    .vendor-list .rank-3 {
+        background: #fcd34d;
+        color: #1f2937;
+    }
+    .vendor-list .vendor-name {
+        font-size: 15px;
+        font-weight: 700;
+    }
+    .vendor-list .vendor-subtext {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-top: 4px;
+        font-weight: 500;
+    }
+    .vendor-list .score-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        border: 1px solid transparent;
+    }
+    .vendor-list .score-strong {
+        background: #dcfce7;
+        color: #15803d;
+        border-color: #86efac;
+    }
+    .vendor-list .score-mid {
+        background: #fef9c3;
+        color: #a16207;
+        border-color: #fde047;
+    }
+    .vendor-list .score-low {
+        background: #fee2e2;
+        color: #b91c1c;
+        border-color: #fecaca;
+    }
+    .vendor-list .empty-state {
+        padding: 40px 32px;
+        text-align: center;
+    }
+    .vendor-list .empty-state h3 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+    .vendor-list .empty-state p {
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+        .vendor-list .page-chip {
+            white-space: normal;
+        }
+    }
+</style>
+
+{% endblock %}
